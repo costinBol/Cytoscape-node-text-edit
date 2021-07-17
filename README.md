@@ -5,7 +5,8 @@ cytoscape-node-text-edit
 ## Description
 
 
-This extension allows node labels to be edited in place ([demo](https://cytoscape.github.io ).
+This extension allows node labels to be edited in place.
+![Demo](https://user-images.githubusercontent.com/5864423/126026984-692520ae-748a-4c84-906c-e224f6e76b58.mp4)
 
 
 ## Dependencies
