@@ -1,0 +1,102 @@
+<!DOCTYPE>
+
+<html>
+
+<head>
+  <title>cytoscape-node-text-edit demo</title>
+
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+  <!-- for testing with local version of cytoscape.js --> 
+  <script src="cytoscape.min.js"></script>
+
+  <script src="lodash.js"></script>
+  <script src="cytoscape-node-text-edit.js"></script>
+
+  <style>
+    body {
+      font-family: helvetica neue, helvetica, liberation sans, arial, sans-serif;
+      font-size: 14px;
+    }
+
+    #cy {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      z-index: 999;
+    }
+
+    h1 {
+      opacity: 0.5;
+      font-size: 1em;
+      font-weight: bold;
+    }
+ 
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      var cy = window.cy = cytoscape({
+        container: document.getElementById('cy'),
+
+        layout: {
+          name: 'grid',
+          rows: 2,
+          cols: 2
+        },
+
+
+        style: [
+          {
+            selector: 'node[name]',
+            style: {
+              'content': 'data(name)',
+              'text-events': 'yes',
+              'text-wrap': 'wrap',
+              'text-max-width': '200',
+              'text-justification': 'center'
+            }
+          },
+
+          {
+            selector: 'edge',
+            style: {
+              'curve-style': 'bezier',
+              'target-arrow-shape': 'triangle'
+            }
+          },
+
+        ],
+
+        elements: {
+          nodes: [
+            { data: { id: 'j', name: 'Jerry' } },
+            { data: { id: 'e', name: 'Elaine' } },
+            { data: { id: 'k', name: 'Kramer' } },
+            { data: { id: 'g', name: 'George' } }
+          ],
+          edges: [
+            { data: { source: 'j', target: 'e' } }
+          ]
+        }
+      });
+
+      cy.nodetextedit({
+        showLogs: true
+      });
+
+    });
+  </script>
+</head>
+
+<body>
+  <h1>cytoscape-node-text-edit demo</h1>
+
+  <div id="cy"></div>
+
+</body>
+
+</html>
