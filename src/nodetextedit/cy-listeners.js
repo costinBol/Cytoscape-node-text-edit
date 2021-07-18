@@ -17,7 +17,7 @@ function addCytoscapeListeners() {
     log("Zoom: ", cy.zoom());
     window.cyNodeEditing = node;
 
-    showEditBox(node, options);
+    showEditBox(node, options, cy);
    
   });
 

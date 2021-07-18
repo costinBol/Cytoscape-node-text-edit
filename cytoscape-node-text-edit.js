@@ -134,7 +134,13 @@ module.exports = Object.assign != null ? Object.assign.bind(Object) : function (
 var _require = __webpack_require__(0),
     log = _require.log;
 
-function showEditBox(node, options) {
+function showEditBox(node, options, cy) {
+
+  log("Showing edit box", cy);
+
+  var cyContainer = cy.container();
+  var cyPos = getPosition(cyContainer);
+  log("Cy pos: ", cyPos);
 
   var pos = node.renderedBoundingBox();
   var style = node.renderedStyle();
@@ -145,16 +151,16 @@ function showEditBox(node, options) {
 
   // Set position  
   cont.style.position = 'fixed';
-  cont.style.top = pos.y1 + 'px';
+  cont.style.top = cyPos.y + pos.y1 + 'px';
   cont.style.minHeight = pos.h + 'px';
   cont.style.zIndex = options.zIndex;
-  cont.style.left = pos.x1 - 200 + 'px';
+  cont.style.left = cyPos.x + (pos.x1 - 200) + 'px';
   cont.style.minWidth = pos.w + 400 + 'px';
   if (style.textMaxWidth) {
     cont.style.minWidth = style.textMaxWidth;
     var iw = parseFloat(style.textMaxWidth.substr(0, style.textMaxWidth.length - 2));
     log("Parsed width:", iw);
-    cont.style.left = pos.x1 + pos.w / 2 - iw / 2 + 'px';
+    cont.style.left = cyPos.x + (pos.x1 + pos.w / 2 - iw / 2) + 'px';
   }
 
   cont.innerText = node.data(options.nodeLabel);
@@ -167,7 +173,9 @@ function showEditBox(node, options) {
   cont.style.fontFamily = style.fontFamily;
   cont.style.fontSize = style.fontSize;
   cont.style.fontWeight = style.fontWeight;
-  cont.style.textAlign = style['text-justification'];
+  cont.style.textAlign = style['text-halign'] || 'center';
+  cont.style.lineHeight = (style['line-height'] || 1) + 'rem';
+
   if (cont.style.textJustify == 'left') {
     cont.style.left = pos.x + 'px';
   }
@@ -177,18 +185,50 @@ function showEditBox(node, options) {
   // After overlay added, focus and set selection
   cont.focus();
   window.cyEditBox = cont.id;
-  var r = document.createRange();
-  if (options.selectAllText) {
-    r.selectNodeContents(cont);
-  } else {
-    r.selectNode(cont);
-  }
-  log("Selection: ", r);
-  var s = window.getSelection();
-  s.removeAllRanges();
-  s.addRange(r);
+
+  setCursorToEnd(cont, options.selectAllText);
 
   return cont;
+}
+
+// Helper function to get an element's exact position
+// Source: https://www.kirupa.com/html5/get_element_position_using_javascript.htm
+function getPosition(el) {
+  var xPos = 0;
+  var yPos = 0;
+
+  while (el) {
+    if (el.tagName == "BODY") {
+      // deal with browser quirks with body/window/document and page scroll
+      var xScroll = el.scrollLeft || document.documentElement.scrollLeft;
+      var yScroll = el.scrollTop || document.documentElement.scrollTop;
+
+      xPos += el.offsetLeft - xScroll + el.clientLeft;
+      yPos += el.offsetTop - yScroll + el.clientTop;
+    } else {
+      // for all other non-BODY elements
+      xPos += el.offsetLeft - el.scrollLeft + el.clientLeft;
+      yPos += el.offsetTop - el.scrollTop + el.clientTop;
+    }
+
+    el = el.offsetParent;
+  }
+  return {
+    x: xPos,
+    y: yPos
+  };
+}
+
+function setCursorToEnd(el, selectAllText) {
+  var range = document.createRange();
+  var sel = window.getSelection();
+  range.selectNodeContents(el);
+  if (!selectAllText) {
+    range.collapse(false);
+  }
+  sel.removeAllRanges();
+  sel.addRange(range);
+  el.focus();
 }
 
 module.exports = {
@@ -267,7 +307,7 @@ function addCytoscapeListeners() {
     log("Zoom: ", cy.zoom());
     window.cyNodeEditing = node;
 
-    showEditBox(node, options);
+    showEditBox(node, options, cy);
   });
 
   this.addListener(cy, 'tap', function (e) {
