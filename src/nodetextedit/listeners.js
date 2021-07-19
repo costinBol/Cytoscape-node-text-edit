@@ -97,4 +97,7 @@ function emit( type, position, ...args ){
   return this;
 }
 
-module.exports = { addListener, addListeners, removeListener, removeListeners, emit };
+function closeEditing(options){
+  this.closeEditBox(options);
+}
+module.exports = { addListener, addListeners, removeListener, removeListeners, emit, closeEditing};

@@ -29,6 +29,8 @@ function NodeTextEdit( options ){
   this.addListeners();
   
   this.preventDefault = e => e.preventDefault();
+
+  this.closeEditing = () => cyListeners.closeEditBox(options);
 }
 
 let proto = NodeTextEdit.prototype = {};

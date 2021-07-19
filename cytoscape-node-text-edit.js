@@ -93,7 +93,7 @@ function log(msg) {
       parameters[_key - 1] = arguments[_key];
     }
 
-    console.log(msg, parameters);
+    console.log("[cytoscape-node-text-edit] " + msg, parameters);
   }
 }
 
@@ -296,6 +296,10 @@ function addCytoscapeListeners() {
   // Show editor on node tap
 
   this.addListener(cy, 'tap', 'node', function (e) {
+
+    // Close existing box if any open
+    closeEditBox(options);
+
     var node = e.target;
 
     log("Node tap event:", e);
@@ -303,6 +307,11 @@ function addCytoscapeListeners() {
     log("Node position: ", node.renderedPosition());
     log("Rendered bounding box:", node.renderedBoundingBox());
     log("Rendered style: ", node.renderedStyle());
+
+    if (node.classes().includes("eh-handle")) {
+      // Don't add edit box for cytoscape-edgehandles handles
+      return;
+    }
 
     log("Zoom: ", cy.zoom());
     window.cyNodeEditing = node;
@@ -327,6 +336,17 @@ function addCytoscapeListeners() {
       }
     }
   });
+
+  this.addListener(cy, 'destroy', function (e) {
+    if (e.target === cy) {
+
+      if (window.cyEditBox) {
+        log("CY- destroy - closing overlay");
+        closeEditBox(options);
+      }
+    }
+  });
+
   return this;
 }
 
@@ -335,6 +355,11 @@ function addCytoscapeListeners() {
  */
 function closeEditBox(options) {
   var div = document.getElementById(window.cyEditBox);
+  if (!div) {
+    window.cyEditBox = undefined;
+    window.cyNodeEditing = undefined;
+    return;
+  }
 
   log("closeEditBox", div.innerText);
   if (window.cyNodeEditing) {
@@ -348,7 +373,7 @@ function closeEditBox(options) {
   window.cyEditBox = undefined;
   window.cyNodeEditing = undefined;
 }
-module.exports = { addCytoscapeListeners: addCytoscapeListeners };
+module.exports = { addCytoscapeListeners: addCytoscapeListeners, closeEditBox: closeEditBox };
 
 /***/ }),
 /* 6 */
@@ -389,6 +414,10 @@ function NodeTextEdit(options) {
 
   this.preventDefault = function (e) {
     return e.preventDefault();
+  };
+
+  this.closeEditing = function () {
+    return cyListeners.closeEditBox(options);
   };
 }
 
@@ -529,7 +558,10 @@ function emit(type, position) {
   return this;
 }
 
-module.exports = { addListener: addListener, addListeners: addListeners, removeListener: removeListener, removeListeners: removeListeners, emit: emit };
+function closeEditing(options) {
+  this.closeEditBox(options);
+}
+module.exports = { addListener: addListener, addListeners: addListeners, removeListener: removeListener, removeListeners: removeListeners, emit: emit, closeEditing: closeEditing };
 
 /***/ })
 /******/ ]);

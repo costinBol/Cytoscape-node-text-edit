@@ -4,7 +4,7 @@ var LOG_OPTIONS = {
 
 function log(msg, ...parameters) {   
     if (LOG_OPTIONS.enabled) {
-      console.log(msg, parameters);
+      console.log(`[cytoscape-node-text-edit] ${msg}`, parameters);
     }
 }
   

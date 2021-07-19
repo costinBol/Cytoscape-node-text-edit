@@ -84,19 +84,27 @@
         }
       });
 
-      cy.nodetextedit({
+      window.cy_nte = cy.nodetextedit({
         showLogs: true,
         selectAllText: true
       });
 
     });
+
+    function closeEdit(){
+      if(window.cy_nte){
+        window.cy_nte.closeEditing();
+      }
+    }
   </script>
 </head>
 
 <body>
+
   <h1>cytoscape-node-text-edit demo</h1>
 
   <div id="cy"></div>
+  <button type="button" onclick="closeEdit();" >Close editing</button>
 
 </body>
 

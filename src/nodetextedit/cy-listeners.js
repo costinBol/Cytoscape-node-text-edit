@@ -6,6 +6,10 @@ function addCytoscapeListeners() {
 
   // Show editor on node tap
   this.addListener(cy, 'tap', 'node', e => {
+
+    // Close existing box if any open
+    closeEditBox(options);
+    
     let node = e.target;
 
     log("Node tap event:", e); 
@@ -13,6 +17,11 @@ function addCytoscapeListeners() {
     log("Node position: ", node.renderedPosition());
     log("Rendered bounding box:", node.renderedBoundingBox());
     log("Rendered style: ", node.renderedStyle());
+
+    if(node.classes().includes("eh-handle")){
+      // Don't add edit box for cytoscape-edgehandles handles
+      return;
+    }
      
     log("Zoom: ", cy.zoom());
     window.cyNodeEditing = node;
@@ -39,6 +48,18 @@ function addCytoscapeListeners() {
     }
   }
   );
+
+  this.addListener(cy, 'destroy', e => {
+    if (e.target === cy) {
+     
+      if (window.cyEditBox) {
+        log("CY- destroy - closing overlay");
+        closeEditBox(options);
+      }
+    }
+  }
+  );
+
   return this;
 }
 
@@ -47,6 +68,11 @@ function addCytoscapeListeners() {
  */
 function closeEditBox(options) {
   let div = document.getElementById(window.cyEditBox);
+  if(!div){
+    window.cyEditBox = undefined;
+    window.cyNodeEditing = undefined;
+    return;
+  }
 
   log("closeEditBox", div.innerText);
   if (window.cyNodeEditing) {
@@ -60,4 +86,4 @@ function closeEditBox(options) {
   window.cyEditBox = undefined;
   window.cyNodeEditing = undefined;
 }
-module.exports = { addCytoscapeListeners };
+module.exports = { addCytoscapeListeners, closeEditBox };
