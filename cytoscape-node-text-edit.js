@@ -355,6 +355,7 @@ function addCytoscapeListeners() {
  */
 function closeEditBox(options) {
   var div = document.getElementById(window.cyEditBox);
+  log("closeEditBox - div:", div);
   if (!div) {
     window.cyEditBox = undefined;
     window.cyNodeEditing = undefined;
@@ -402,6 +403,8 @@ var defaults = {
 };
 
 function NodeTextEdit(options) {
+  var _this = this;
+
   var cy = options.cy;
 
   this.cy = cy;
@@ -417,7 +420,7 @@ function NodeTextEdit(options) {
   };
 
   this.closeEditing = function () {
-    return cyListeners.closeEditBox(options);
+    return cyListeners.closeEditBox(_this.options);
   };
 }
 

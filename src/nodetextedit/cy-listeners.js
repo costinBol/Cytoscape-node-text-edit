@@ -68,6 +68,7 @@ function addCytoscapeListeners() {
  */
 function closeEditBox(options) {
   let div = document.getElementById(window.cyEditBox);
+  log("closeEditBox - div:", div);
   if(!div){
     window.cyEditBox = undefined;
     window.cyNodeEditing = undefined;
@@ -76,7 +77,7 @@ function closeEditBox(options) {
 
   log("closeEditBox", div.innerText);
   if (window.cyNodeEditing) {
-     
+    
     let itxt = div.innerText;
     log("Text inner:" + itxt);
  

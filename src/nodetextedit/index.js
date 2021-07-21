@@ -30,7 +30,7 @@ function NodeTextEdit( options ){
   
   this.preventDefault = e => e.preventDefault();
 
-  this.closeEditing = () => cyListeners.closeEditBox(options);
+  this.closeEditing = () => cyListeners.closeEditBox(this.options);
 }
 
 let proto = NodeTextEdit.prototype = {};
