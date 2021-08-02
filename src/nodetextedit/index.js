@@ -14,7 +14,8 @@ let defaults = {
   backgroundOpacity: 0.9, // Opacity of background overlay
   nodeLabel: 'name', // Which node.data() property holds the label
   showLogs: false, // Show debugging info in console
-  zIndex: 1000 // zIndex of editing overlay
+  zIndex: 1000, // zIndex of editing overlay
+  maxTextWidth: 1000 // Maximum text width in pixels - if 'text-max-width'not specified
 };
 
 function NodeTextEdit( options ){

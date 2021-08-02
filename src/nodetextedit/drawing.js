@@ -20,13 +20,19 @@ function showEditBox(node, options, cy) {
   cont.style.top = cyPos.y + (pos.y1) + 'px';
   cont.style.minHeight = (pos.h) + 'px';
   cont.style.zIndex = options.zIndex;
-  cont.style.left = cyPos.x + (pos.x1 - 200) + 'px';
-  cont.style.minWidth = (pos.w + 400) + 'px';
-  if (style.textMaxWidth) {
-    cont.style.minWidth = style.textMaxWidth;
+ 
+  if (style.textMaxWidth) {   
     let iw = parseFloat(style.textMaxWidth.substr(0, style.textMaxWidth.length - 2));
     log("Parsed width:", iw);
-    cont.style.left = cyPos.x + (pos.x1 + pos.w / 2 - iw / 2) + 'px';
+    if(iw > options.maxTextWidth){
+      iw = options.maxTextWidth;
+      log("Capped width:", iw);
+    }
+    cont.style.width = iw + "px";
+    cont.style.left = (cyPos.x + pos.x1 + (pos.w - iw)/2) + 'px'; 
+  }else{
+    cont.style.width = 400;
+    cont.style.left = cyPos.x + (pos.x1 - 200) + 'px';
   }
 
   cont.innerText = node.data(options.nodeLabel);
