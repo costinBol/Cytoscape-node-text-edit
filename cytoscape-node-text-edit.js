@@ -186,6 +186,15 @@ function showEditBox(node, options, cy) {
     cont.style.left = pos.x + 'px';
   }
 
+  if (options.pasteAsPlainText) {
+    cont.addEventListener('paste', function (e) {
+      log("Intercepted paste - transforming to plain text");
+      e.preventDefault();
+      var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+      window.document.execCommand('insertText', false, text);
+    });
+  }
+
   document.body.appendChild(cont);
 
   // After overlay added, focus and set selection
@@ -406,6 +415,7 @@ var defaults = {
   nodeLabel: 'name', // Which node.data() property holds the label
   showLogs: false, // Show debugging info in console
   zIndex: 1000, // zIndex of editing overlay
+  pasteAsPlainText: true,
   maxTextWidth: 1000 // Maximum text width in pixels - if 'text-max-width'not specified
 };
 

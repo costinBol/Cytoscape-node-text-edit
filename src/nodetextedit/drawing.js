@@ -20,17 +20,17 @@ function showEditBox(node, options, cy) {
   cont.style.top = cyPos.y + (pos.y1) + 'px';
   cont.style.minHeight = (pos.h) + 'px';
   cont.style.zIndex = options.zIndex;
- 
-  if (style.textMaxWidth) {   
+
+  if (style.textMaxWidth) {
     let iw = parseFloat(style.textMaxWidth.substr(0, style.textMaxWidth.length - 2));
     log("Parsed width:", iw);
-    if(iw > options.maxTextWidth){
+    if (iw > options.maxTextWidth) {
       iw = options.maxTextWidth;
       log("Capped width:", iw);
     }
     cont.style.width = iw + "px";
-    cont.style.left = (cyPos.x + pos.x1 + (pos.w - iw)/2) + 'px'; 
-  }else{
+    cont.style.left = (cyPos.x + pos.x1 + (pos.w - iw) / 2) + 'px';
+  } else {
     cont.style.width = 400;
     cont.style.left = cyPos.x + (pos.x1 - 200) + 'px';
   }
@@ -50,6 +50,15 @@ function showEditBox(node, options, cy) {
 
   if (cont.style.textJustify == 'left') {
     cont.style.left = (pos.x) + 'px';
+  }
+
+  if (options.pasteAsPlainText) {
+    cont.addEventListener('paste', (e) => {
+      log("Intercepted paste - transforming to plain text");
+      e.preventDefault();
+      const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+      window.document.execCommand('insertText', false, text);
+    });
   }
 
   document.body.appendChild(cont);

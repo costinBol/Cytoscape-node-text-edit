@@ -15,6 +15,7 @@ let defaults = {
   nodeLabel: 'name', // Which node.data() property holds the label
   showLogs: false, // Show debugging info in console
   zIndex: 1000, // zIndex of editing overlay
+  pasteAsPlainText: true,
   maxTextWidth: 1000 // Maximum text width in pixels - if 'text-max-width'not specified
 };
 
