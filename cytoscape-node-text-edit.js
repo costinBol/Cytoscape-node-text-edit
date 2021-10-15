@@ -331,7 +331,13 @@ function addCytoscapeListeners() {
     log("Zoom: ", cy.zoom());
     window.cyNodeEditing = node;
 
-    showEditBox(node, options, cy);
+    var editor = showEditBox(node, options, cy);
+    editor.addEventListener("keyup", function (ev) {
+      if (ev.key == "Escape") {
+        log("KeyUp - Escape: ", ev);
+        closeEditBox(options);
+      }
+    });
   });
 
   this.addListener(cy, 'tap', function (e) {

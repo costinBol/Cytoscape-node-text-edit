@@ -9,25 +9,30 @@ function addCytoscapeListeners() {
 
     // Close existing box if any open
     closeEditBox(options);
-    
+
     let node = e.target;
 
-    log("Node tap event:", e); 
+    log("Node tap event:", e);
     log("Node tapped: ", node);
     log("Node position: ", node.renderedPosition());
     log("Rendered bounding box:", node.renderedBoundingBox());
     log("Rendered style: ", node.renderedStyle());
 
-    if(node.classes().includes("eh-handle")){
+    if (node.classes().includes("eh-handle")) {
       // Don't add edit box for cytoscape-edgehandles handles
       return;
     }
-     
+
     log("Zoom: ", cy.zoom());
     window.cyNodeEditing = node;
 
-    showEditBox(node, options, cy);
-   
+    let editor = showEditBox(node, options, cy);
+    editor.addEventListener("keyup", ev => {
+      if (ev.key == "Escape") {
+        log("KeyUp - Escape: ", ev);
+        closeEditBox(options);
+      }
+    });
   });
 
   this.addListener(cy, 'tap', e => {
@@ -40,7 +45,7 @@ function addCytoscapeListeners() {
   });
   this.addListener(cy, 'viewport', e => {
     if (e.target === cy) {
-     
+
       if (window.cyEditBox) {
         log("CY- viewport change - closing overlay");
         closeEditBox(options);
@@ -51,7 +56,7 @@ function addCytoscapeListeners() {
 
   this.addListener(cy, 'destroy', e => {
     if (e.target === cy) {
-     
+
       if (window.cyEditBox) {
         log("CY- destroy - closing overlay");
         closeEditBox(options);
@@ -69,7 +74,7 @@ function addCytoscapeListeners() {
 function closeEditBox(options) {
   let div = document.getElementById(window.cyEditBox);
   log("closeEditBox - div:", div);
-  if(!div){
+  if (!div) {
     window.cyEditBox = undefined;
     window.cyNodeEditing = undefined;
     return;
@@ -77,10 +82,10 @@ function closeEditBox(options) {
 
   log("closeEditBox", div.innerText);
   if (window.cyNodeEditing) {
-    
+
     let itxt = div.innerText;
     log("Text inner:" + itxt);
- 
+
     window.cyNodeEditing.data(options.nodeLabel, itxt);
   }
   document.body.removeChild(div);
