@@ -33,6 +33,8 @@ function NodeTextEdit( options ){
   this.preventDefault = e => e.preventDefault();
 
   this.closeEditing = () => cyListeners.closeEditBox(this.options);
+  
+  this.changeEditBoxText = (newText) => cyListeners.changeEditBoxText(newText);
 }
 
 let proto = NodeTextEdit.prototype = {};

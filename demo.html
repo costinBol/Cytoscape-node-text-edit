@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
 
-  <!-- for testing with local version of cytoscape.js --> 
+  <!-- for testing with local version of cytoscape.js -->
   <script src="cytoscape.min.js"></script>
 
   <script src="lodash.js"></script>
@@ -22,7 +22,7 @@
     #cy {
       position: absolute;
       left: 0;
-      top: 0;
+      top: 3rem;
       bottom: 0;
       right: 0;
       z-index: 999;
@@ -33,7 +33,10 @@
       font-size: 1em;
       font-weight: bold;
     }
- 
+
+    button{
+      z-index: 1000;
+    }
   </style>
 
   <script>
@@ -91,9 +94,15 @@
 
     });
 
-    function closeEdit(){
-      if(window.cy_nte){
+    function closeEdit() {
+      if (window.cy_nte) {
         window.cy_nte.closeEditing();
+      }
+    }
+
+    function changeText(newText) {
+      if (window.cy_nte) {
+        window.cy_nte.changeEditBoxText(newText);
       }
     }
   </script>
@@ -102,10 +111,13 @@
 <body>
 
   <h1>cytoscape-node-text-edit demo</h1>
-
+  <div id="controls">
+    <button type="button" onclick="closeEdit();">Close editing</button>
+    <button type="button" onclick="changeText('Testing');">Change text</button>  
+  </div>
+  
   <div id="cy"></div>
-  <button type="button" onclick="closeEdit();" >Close editing</button>
-
+ 
 </body>
 
 </html>

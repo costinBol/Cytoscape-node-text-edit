@@ -395,7 +395,13 @@ function closeEditBox(options) {
   window.cyEditBox = undefined;
   window.cyNodeEditing = undefined;
 }
-module.exports = { addCytoscapeListeners: addCytoscapeListeners, closeEditBox: closeEditBox };
+
+function changeEditBoxText(newText) {
+  var div = document.getElementById(window.cyEditBox);
+  log("changeEditBoxText - div:", div);
+  div.innerText = newText;
+}
+module.exports = { addCytoscapeListeners: addCytoscapeListeners, closeEditBox: closeEditBox, changeEditBoxText: changeEditBoxText };
 
 /***/ }),
 /* 6 */
@@ -444,6 +450,10 @@ function NodeTextEdit(options) {
 
   this.closeEditing = function () {
     return cyListeners.closeEditBox(_this.options);
+  };
+
+  this.changeEditBoxText = function (newText) {
+    return cyListeners.changeEditBoxText(newText);
   };
 }
 
