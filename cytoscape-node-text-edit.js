@@ -397,9 +397,13 @@ function closeEditBox(options) {
 }
 
 function changeEditBoxText(newText) {
-  var div = document.getElementById(window.cyEditBox);
-  log("changeEditBoxText - div:", div);
-  div.innerText = newText;
+  if (window.cyEditBox) {
+    var div = document.getElementById(window.cyEditBox);
+    log("changeEditBoxText - div:", div);
+    if (div) {
+      div.innerText = newText;
+    }
+  }
 }
 module.exports = { addCytoscapeListeners: addCytoscapeListeners, closeEditBox: closeEditBox, changeEditBoxText: changeEditBoxText };
 

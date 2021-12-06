@@ -33,7 +33,7 @@ function addCytoscapeListeners() {
         closeEditBox(options);
       }
     });
-    
+
   });
 
   this.addListener(cy, 'tap', e => {
@@ -94,9 +94,13 @@ function closeEditBox(options) {
   window.cyNodeEditing = undefined;
 }
 
-function changeEditBoxText(newText){
-  let div = document.getElementById(window.cyEditBox);
-  log("changeEditBoxText - div:", div);
-  div.innerText = newText;
+function changeEditBoxText(newText) {
+  if (window.cyEditBox) {
+    let div = document.getElementById(window.cyEditBox);
+    log("changeEditBoxText - div:", div);
+    if (div) {
+      div.innerText = newText;
+    }
+  }
 }
 module.exports = { addCytoscapeListeners, closeEditBox, changeEditBoxText };
